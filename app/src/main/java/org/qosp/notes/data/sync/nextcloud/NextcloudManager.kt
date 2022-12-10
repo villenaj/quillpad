@@ -54,10 +54,7 @@ class NextcloudManager(
         }
     }
 
-    override suspend fun deleteNote(
-        note: Note,
-        config: ProviderConfig
-    ): BaseResult {
+    override suspend fun deleteNote(note: Note, config: ProviderConfig): BaseResult {
         if (config !is NextcloudConfig) return InvalidConfig
 
         val nextcloudNote = note.asNextcloudNote()
@@ -69,21 +66,6 @@ class NextcloudManager(
             idMappingRepository.deleteByRemoteId(CloudService.NEXTCLOUD, nextcloudNote.id)
         }
     }
-
-    override suspend fun moveNoteToBin(note: Note, config: ProviderConfig): BaseResult {
-        if (config !is NextcloudConfig) return InvalidConfig
-
-        val nextcloudNote = note.asNextcloudNote()
-
-        if (nextcloudNote.id == 0L) return GenericError("Cannot delete note that does not exist.")
-
-        return tryCalling {
-            nextcloudAPI.deleteNote(nextcloudNote, config)
-            idMappingRepository.unassignProviderFromNote(CloudService.NEXTCLOUD, note.id)
-        }
-    }
-
-    override suspend fun restoreNote(note: Note, config: ProviderConfig) = createNote(note, config)
 
     override suspend fun updateNote(
         note: Note,

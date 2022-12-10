@@ -1,19 +1,17 @@
 package org.qosp.notes.data.sync.core
 
+import android.content.Context
+import android.util.Log
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.channels.actor
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import org.qosp.notes.data.model.Note
 import org.qosp.notes.data.repo.IdMappingRepository
+import org.qosp.notes.data.sync.fs.StorageConfig
+import org.qosp.notes.data.sync.fs.StorageManager
 import org.qosp.notes.data.sync.nextcloud.NextcloudConfig
 import org.qosp.notes.data.sync.nextcloud.NextcloudManager
 import org.qosp.notes.preferences.CloudService
@@ -25,9 +23,12 @@ class SyncManager(
     private val preferenceRepository: PreferenceRepository,
     private val idMappingRepository: IdMappingRepository,
     val connectionManager: ConnectionManager,
+    private val context: Context,
     private val nextcloudManager: NextcloudManager,
+    private val storageManager: StorageManager,
     val syncingScope: CoroutineScope,
 ) {
+
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val prefs: Flow<SyncPrefs> = preferenceRepository.getAll().flatMapLatest { prefs ->
@@ -36,6 +37,12 @@ class SyncManager(
             CloudService.NEXTCLOUD -> {
                 NextcloudConfig.fromPreferences(preferenceRepository).map { config ->
                     SyncPrefs(true, nextcloudManager, prefs.syncMode, config)
+                }
+            }
+
+            CloudService.FILE_STORAGE -> {
+                StorageConfig.storageLocation(preferenceRepository, context).map { config ->
+                    SyncPrefs(true, storageManager, prefs.syncMode, config)
                 }
             }
         }
@@ -49,11 +56,10 @@ class SyncManager(
 
         for (msg in channel) {
             with(msg) {
+                Log.i(TAG, "Doing message: $msg")
                 val result = when (this) {
                     is CreateNote -> provider.createNote(note, config)
                     is DeleteNote -> provider.deleteNote(note, config)
-                    is MoveNoteToBin -> provider.moveNoteToBin(note, config)
-                    is RestoreNote -> provider.restoreNote(note, config)
                     is Sync -> provider.sync(config)
                     is UpdateNote -> provider.updateNote(note, config)
                     is Authenticate -> provider.authenticate(config)
@@ -63,7 +69,6 @@ class SyncManager(
                         if (exists) provider.updateNote(note, config) else provider.createNote(note, config)
                     }
                 }
-
                 deferred.complete(result)
             }
         }
@@ -89,11 +94,13 @@ class SyncManager(
         customConfig: ProviderConfig? = null,
         crossinline block: suspend (SyncProvider, ProviderConfig) -> Message,
     ): BaseResult {
-        return ifSyncing(customConfig) { provider, config ->
+        val result = ifSyncing(customConfig) { provider, config ->
             val message = block(provider, config)
             actor.send(message)
             message.deferred.await()
         }
+        Log.i(TAG, "sendMessage: Got result $result")
+        return result
     }
 
     suspend fun sync() = sendMessage { provider, config -> Sync(provider, config) }
@@ -102,20 +109,22 @@ class SyncManager(
 
     suspend fun deleteNote(note: Note) = sendMessage { provider, config -> DeleteNote(note, provider, config) }
 
-    suspend fun moveNoteToBin(note: Note) = sendMessage { provider, config -> MoveNoteToBin(note, provider, config) }
-
-    suspend fun restoreNote(note: Note) = sendMessage { provider, config -> RestoreNote(note, provider, config) }
-
     suspend fun updateNote(note: Note) = sendMessage { provider, config -> UpdateNote(note, provider, config) }
 
-    suspend fun updateOrCreate(note: Note) = sendMessage { provider, config -> UpdateOrCreateNote(note, provider, config) }
+    suspend fun updateOrCreate(note: Note) =
+        sendMessage { provider, config -> UpdateOrCreateNote(note, provider, config) }
 
-    suspend fun isServerCompatible(customConfig: ProviderConfig? = null) = sendMessage(customConfig) { provider, config ->
-        IsServerCompatible(provider, config)
-    }
+    suspend fun isServerCompatible(customConfig: ProviderConfig? = null) =
+        sendMessage(customConfig) { provider, config ->
+            IsServerCompatible(provider, config)
+        }
 
     suspend fun authenticate(customConfig: ProviderConfig? = null) = sendMessage(customConfig) { provider, config ->
         Authenticate(provider, config)
+    }
+
+    companion object {
+        private const val TAG = "SyncManager"
     }
 }
 
@@ -128,13 +137,15 @@ data class SyncPrefs(
 
 private sealed class Message(val provider: SyncProvider, val config: ProviderConfig) {
     val deferred: CompletableDeferred<BaseResult> = CompletableDeferred()
+    override fun toString(): String = this::class.java.simpleName
 }
+
 private class CreateNote(val note: Note, provider: SyncProvider, config: ProviderConfig) : Message(provider, config)
 private class UpdateNote(val note: Note, provider: SyncProvider, config: ProviderConfig) : Message(provider, config)
-private class UpdateOrCreateNote(val note: Note, provider: SyncProvider, config: ProviderConfig) : Message(provider, config)
+private class UpdateOrCreateNote(val note: Note, provider: SyncProvider, config: ProviderConfig) :
+    Message(provider, config)
+
 private class DeleteNote(val note: Note, provider: SyncProvider, config: ProviderConfig) : Message(provider, config)
-private class RestoreNote(val note: Note, provider: SyncProvider, config: ProviderConfig) : Message(provider, config)
-private class MoveNoteToBin(val note: Note, provider: SyncProvider, config: ProviderConfig) : Message(provider, config)
 private class Sync(provider: SyncProvider, config: ProviderConfig) : Message(provider, config)
 private class Authenticate(provider: SyncProvider, config: ProviderConfig) : Message(provider, config)
 private class IsServerCompatible(provider: SyncProvider, config: ProviderConfig) : Message(provider, config)

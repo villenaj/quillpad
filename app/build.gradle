@@ -14,12 +14,18 @@ android {
 
     defaultConfig {
         applicationId "io.github.quillpad"
-        minSdkVersion 21
+        minSdkVersion 25
         targetSdkVersion 33
-        versionCode 10
-        versionName "1.4.6"
+        versionCode 11
+        versionName "1.5-dev"
 
         testInstrumentationRunner "org.qosp.notes.TestRunner"
+        // used by Room, to test migrations
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     if (project.hasProperty("keystore")) {
@@ -65,7 +71,11 @@ android {
         jvmTarget = "1.8"
     }
 
-    compileOptions {
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+    }
+
+        compileOptions {
         coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -73,6 +83,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        dataBinding true
     }
 
     kapt {
@@ -91,8 +102,12 @@ repositories {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1'
+    implementation 'androidx.test.ext:junit-ktx:1.1.5'
     testImplementation "junit:junit:4.13.2"
-    androidTestImplementation "androidx.test.ext:junit:1.1.4"
+    androidTestImplementation 'androidx.test:core:1.5.0'
+    androidTestImplementation "androidx.test.ext:junit:1.1.5"
+    androidTestImplementation "androidx.test:runner:1.5.2"
+    androidTestImplementation "androidx.test:rules:1.5.0"
     androidTestImplementation "androidx.test.espresso:espresso-core:3.5.0"
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.1.6"
     // AndroidX
@@ -118,6 +133,7 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
+    androidTestImplementation "androidx.room:room-testing:$room_version"
 
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"

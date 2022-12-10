@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter
 @AndroidEntryPoint
 class SettingsFragment : BaseFragment(resId = R.layout.fragment_settings) {
     private val binding by viewBinding(FragmentSettingsBinding::bind)
-    private val model: SettingsViewModel by viewModels()
+    private val model: SettingsViewModel by activityViewModels()
 
     private var appPreferences = AppPreferences()
 
@@ -59,6 +59,8 @@ class SettingsFragment : BaseFragment(resId = R.layout.fragment_settings) {
             requireContext().resources.getDimension(R.dimen.app_bar_elevation)
         )
 
+        binding.model = model
+        binding.lifecycleOwner = this
         binding.settingRestoreNotes.setOnClickListener { loadBackupLauncher.launch(null) }
 
         binding.settingBackupNotes.setOnClickListener {
@@ -72,29 +74,17 @@ class SettingsFragment : BaseFragment(resId = R.layout.fragment_settings) {
             appPreferences = it
 
             with(appPreferences) {
-                binding.settingGoToSyncSettings.subText = when (cloudService) {
+                val goToSync = when (cloudService) {
                     CloudService.DISABLED -> getString(R.string.preferences_currently_not_syncing)
                     else -> getString(R.string.preferences_currently_syncing_with, getString(cloudService.nameResource))
                 }
-                binding.settingColorScheme.subText = getString(colorScheme.nameResource)
-                binding.settingThemeMode.subText = getString(themeMode.nameResource)
-                binding.settingDarkThemeMode.subText = getString(darkThemeMode.nameResource)
-                binding.settingLayoutMode.subText = getString(layoutMode.nameResource)
+                binding.settingGoToSyncSettings.subText = goToSync
                 binding.settingLayoutMode.setIcon(
                     when (layoutMode) {
                         LayoutMode.GRID -> R.drawable.ic_grid
                         LayoutMode.LIST -> R.drawable.ic_list
                     }
                 )
-                binding.settingSortMethod.subText = getString(sortMethod.nameResource)
-                binding.settingSortMethod.subText = getString(sortMethod.nameResource)
-                binding.settingBackupStrategy.subText = getString(backupStrategy.nameResource)
-                binding.settingOpenMedia.subText = getString(openMediaIn.nameResource)
-                binding.settingNoteDeletion.subText = getString(noteDeletionTime.nameResource)
-
-                binding.settingGroupNotesWithoutNotebook.subText = getString(groupNotesWithoutNotebook.nameResource)
-                binding.settingShowDate.subText = getString(showDate.nameResource)
-
                 with(DateTimeFormatter.ofPattern(getString(dateFormat.patternResource))) {
                     binding.settingDateFormat.subText = format(LocalDate.now())
                 }
@@ -161,7 +151,10 @@ class SettingsFragment : BaseFragment(resId = R.layout.fragment_settings) {
     }
 
     private fun setupGroupNotesWithoutNotebookListener() = binding.settingGroupNotesWithoutNotebook.setOnClickListener {
-        showPreferenceDialog(R.string.preferences_group_notes_without_notebook, appPreferences.groupNotesWithoutNotebook) { selected ->
+        showPreferenceDialog(
+            R.string.preferences_group_notes_without_notebook,
+            appPreferences.groupNotesWithoutNotebook
+        ) { selected ->
             model.setPreference(selected)
         }
     }
