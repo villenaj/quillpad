@@ -1,5 +1,6 @@
 package org.qosp.notes.ui.editor
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,6 +37,7 @@ import org.qosp.notes.preferences.ShowFabChangeMode
 import org.qosp.notes.preferences.TimeFormat
 import java.time.Instant
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class EditorViewModel @Inject constructor(
@@ -185,7 +187,8 @@ class EditorViewModel @Inject constructor(
 
             syncJob?.cancel()
             syncJob = launch {
-                delay(300L) // To prevent multiple requests
+                delay(3.seconds) // To prevent multiple requests
+                Log.i(TAG, "update: Shouldn't multi update")
                 syncManager.updateOrCreate(new)
             }
         }
@@ -201,3 +204,5 @@ class EditorViewModel @Inject constructor(
         val isInitialized: Boolean = false,
     )
 }
+
+private const val TAG = "EditorViewModel"
