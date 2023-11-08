@@ -94,6 +94,7 @@ android {
         }
     }
 
+    namespace 'org.qosp.notes'
 }
 
 repositories {
