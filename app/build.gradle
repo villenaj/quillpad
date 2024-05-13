@@ -68,10 +68,6 @@ android {
         }
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11
-    }
-
     sourceSets {
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
@@ -125,6 +121,7 @@ dependencies {
     implementation libs.roomRuntime
     implementation libs.roomKtx
     testImplementation libs.roomTesting
+    androidTestImplementation libs.roomTesting
 
     // Lifecycle
     implementation libs.bundles.kotlin.lifecycle
