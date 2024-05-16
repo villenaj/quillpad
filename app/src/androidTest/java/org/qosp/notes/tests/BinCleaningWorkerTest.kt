@@ -12,7 +12,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.qosp.notes.components.workers.BinCleaningWorker
 import org.qosp.notes.data.model.Note
 import org.qosp.notes.data.repo.NoteRepository
 import org.qosp.notes.preferences.NoteDeletionTime
