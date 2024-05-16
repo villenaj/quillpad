@@ -2,7 +2,9 @@
 <resources>
     <string name="app_name" translatable="false">Note-Taking</string>
     <string name="app_website" translatable="false"></string>
-    <string name="app_developer_name" translatable="false"></string>
+    <string name="app_developer_name" translatable="false">
+        Agarao, Reymalyn G.\nBantilan, Mikee G.\nBariso, Arreon Jake T.\nDilao, Francis Y.\nJovito, John Norbert A.\nLabanancia, John Noel B.\nMonsanto, Arnil D.\nSaludar, John Limar B.\nTutor, Meldred I.\nZafra, Dominique B.
+    </string>
     <string name="app_developer_repo" translatable="false"></string>
     <string name="app_repo" translatable="false"></string>
     <string name="app_support_page" translatable="false"></string>

@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:transitionGroup="true"
@@ -44,16 +45,16 @@
                 android:id="@+id/action_website"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:iconSrc="@drawable/ic_web"
                 app:subText="@string/app_website"
-                app:text="@string/about_website" />
+                app:text="@string/about_website"
+                tools:visibility="gone" />
 
             <org.qosp.notes.ui.utils.views.PreferenceView
                 android:id="@+id/action_visit_developer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"
                 app:iconSrc="@drawable/ic_person"
                 app:subText="@string/app_developer_name"
                 app:text="@string/about_developer" />
@@ -62,10 +63,11 @@
                 android:id="@+id/action_contribute"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:iconSrc="@drawable/ic_code"
                 app:subText="@string/app_repo"
-                app:text="@string/about_contribute" />
+                app:text="@string/about_contribute"
+                tools:visibility="gone" />
 
             <org.qosp.notes.ui.utils.views.PreferenceView
                 android:id="@+id/action_support"
@@ -74,16 +76,18 @@
                 android:visibility="invisible"
                 app:iconSrc="@drawable/ic_heart"
                 app:subText="@string/about_support_subtext"
-                app:text="@string/about_support" />
+                app:text="@string/about_support"
+                tools:visibility="gone" />
 
             <org.qosp.notes.ui.utils.views.PreferenceView
                 android:id="@+id/action_view_libraries"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:iconSrc="@drawable/ic_library"
                 app:subText="@string/about_libraries_subtext"
-                app:text="@string/about_libraries" />
+                app:text="@string/about_libraries"
+                tools:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 
