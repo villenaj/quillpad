@@ -16,6 +16,7 @@ import org.qosp.notes.data.model.NoteTagJoin
 import org.qosp.notes.data.model.Notebook
 import org.qosp.notes.data.model.Reminder
 import org.qosp.notes.data.model.Tag
+import org.qosp.notes.data.dao.TagDao
 
 @Database(
     entities = [
