@@ -97,7 +97,6 @@ import org.qosp.notes.ui.utils.getDimensionAttribute
 import org.qosp.notes.ui.utils.getDrawableCompat
 import org.qosp.notes.ui.utils.hideKeyboard
 import org.qosp.notes.ui.utils.liftAppBarOnScroll
-import org.qosp.notes.ui.utils.navigateSafely
 import org.qosp.notes.ui.utils.requestFocusAndKeyboard
 import org.qosp.notes.ui.utils.resId
 import org.qosp.notes.ui.utils.resolveAttribute
@@ -379,12 +378,6 @@ class EditorFragment : BaseFragment(R.layout.fragment_editor) {
                     activityModel.deleteNotesPermanently(note)
                     sendMessage(getString(R.string.indicator_deleted_note_permanently))
                     activity?.onBackPressed()
-                }
-
-                R.id.action_view_tags -> {
-                    findNavController().navigateSafely(
-                        EditorFragmentDirections.actionEditorToTags().setNoteId(note.id)
-                    )
                 }
 
                 R.id.action_view_reminders -> {

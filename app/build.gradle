@@ -14,7 +14,7 @@ android {
     buildToolsVersion = "30.0.3"
     namespace 'org.qosp.notes'
     defaultConfig {
-        applicationId "io.github.quillpad"
+        applicationId "io.something.sample"
         minSdkVersion 24
         targetSdkVersion 34
         versionCode 22
