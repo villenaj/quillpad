@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import org.qosp.notes.data.model.Note
 import org.qosp.notes.data.repo.IdMappingRepository
-import org.qosp.notes.data.sync.nextcloud.NextcloudConfig
-import org.qosp.notes.data.sync.nextcloud.NextcloudManager
+import org.qosp.notes.data.sync.local.LocalConfig
+import org.qosp.notes.data.sync.local.NextcloudManager
 import org.qosp.notes.preferences.CloudService
 import org.qosp.notes.preferences.PreferenceRepository
 import org.qosp.notes.preferences.SyncMode
@@ -34,7 +34,7 @@ class SyncManager(
         when (prefs.cloudService) {
             CloudService.DISABLED -> flowOf(SyncPrefs(false, null, prefs.syncMode, null))
             CloudService.NEXTCLOUD -> {
-                NextcloudConfig.fromPreferences(preferenceRepository).map { config ->
+                LocalConfig.fromPreferences(preferenceRepository).map { config ->
                     SyncPrefs(true, nextcloudManager, prefs.syncMode, config)
                 }
             }

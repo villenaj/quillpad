@@ -13,7 +13,7 @@ import javax.inject.Singleton
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [DatabaseModule::class],
+    replaces = [LocalDatabaseModule::class],
 )
 object TestDatabaseModule {
     @Provides

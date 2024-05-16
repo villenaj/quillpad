@@ -10,7 +10,6 @@ import org.qosp.notes.data.dao.NoteDao
 import org.qosp.notes.data.dao.NoteTagDao
 import org.qosp.notes.data.dao.NotebookDao
 import org.qosp.notes.data.dao.ReminderDao
-import org.qosp.notes.data.dao.TagDao
 import org.qosp.notes.data.model.IdMapping
 import org.qosp.notes.data.model.NoteEntity
 import org.qosp.notes.data.model.NoteTagJoin

@@ -1,4 +1,4 @@
-package org.qosp.notes.data.sync.nextcloud
+package org.qosp.notes.data.sync.local
 
 import android.util.Base64
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -9,7 +9,7 @@ import org.qosp.notes.data.sync.core.ProviderConfig
 import org.qosp.notes.preferences.CloudService
 import org.qosp.notes.preferences.PreferenceRepository
 
-data class NextcloudConfig(
+data class LocalConfig(
     override val remoteAddress: String,
     override val username: String,
     private val password: String,
@@ -23,7 +23,7 @@ data class NextcloudConfig(
 
     companion object {
         @OptIn(ExperimentalCoroutinesApi::class)
-        fun fromPreferences(preferenceRepository: PreferenceRepository): Flow<NextcloudConfig?> {
+        fun fromPreferences(preferenceRepository: PreferenceRepository): Flow<LocalConfig?> {
             val url = preferenceRepository.getEncryptedString(PreferenceRepository.NEXTCLOUD_INSTANCE_URL)
             val username = preferenceRepository.getEncryptedString(PreferenceRepository.NEXTCLOUD_USERNAME)
             val password = preferenceRepository.getEncryptedString(PreferenceRepository.NEXTCLOUD_PASSWORD)
@@ -31,7 +31,7 @@ data class NextcloudConfig(
             return url.flatMapLatest { url ->
                 username.flatMapLatest { username ->
                     password.map { password ->
-                        NextcloudConfig(url, username, password)
+                        LocalConfig(url, username, password)
                             .takeUnless { url.isBlank() or username.isBlank() or password.isBlank() }
                     }
                 }
