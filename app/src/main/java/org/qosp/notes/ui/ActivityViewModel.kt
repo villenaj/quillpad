@@ -22,8 +22,6 @@ import org.qosp.notes.data.model.Note
 import org.qosp.notes.data.model.Notebook
 import org.qosp.notes.data.repo.NoteRepository
 import org.qosp.notes.data.repo.NotebookRepository
-import org.qosp.notes.data.repo.ReminderRepository
-import org.qosp.notes.data.repo.TagRepository
 import org.qosp.notes.data.sync.core.BaseResult
 import org.qosp.notes.data.sync.core.SyncManager
 import org.qosp.notes.preferences.GroupNotesWithoutNotebook
@@ -31,7 +29,6 @@ import org.qosp.notes.preferences.LayoutMode
 import org.qosp.notes.preferences.NoteDeletionTime
 import org.qosp.notes.preferences.PreferenceRepository
 import org.qosp.notes.preferences.SortMethod
-import org.qosp.notes.ui.reminders.ReminderManager
 import java.time.Instant
 import javax.inject.Inject
 
@@ -40,9 +37,6 @@ class ActivityViewModel @Inject constructor(
     private val noteRepository: NoteRepository,
     private val notebookRepository: NotebookRepository,
     private val preferenceRepository: PreferenceRepository,
-    private val reminderRepository: ReminderRepository,
-    private val reminderManager: ReminderManager,
-    private val tagRepository: TagRepository,
     private val mediaStorageManager: MediaStorageManager,
     private val syncManager: SyncManager,
 ) : ViewModel() {
@@ -81,13 +75,11 @@ class ActivityViewModel @Inject constructor(
     }
 
     fun deleteNotesPermanently(vararg notes: Note) = viewModelScope.launch(Dispatchers.IO) {
-        notes.forEach { reminderManager.cancelAllRemindersForNote(it.id) }
         noteRepository.deleteNotes(*notes)
     }
 
     fun deleteNotes(vararg notes: Note) {
         viewModelScope.launch(Dispatchers.IO) {
-            notes.forEach { reminderManager.cancelAllRemindersForNote(it.id) }
 
             when (preferenceRepository.get<NoteDeletionTime>().first()) {
                 NoteDeletionTime.INSTANTLY -> {
@@ -204,15 +196,7 @@ class ActivityViewModel @Inject constructor(
         )
 
         val newId = noteRepository.insertNote(cloned)
-        tagRepository.copyTags(oldId, newId)
-        reminderRepository.copyReminders(oldId, newId)
 
-        reminderRepository
-            .getByNoteId(newId)
-            .first()
-            .forEach {
-                reminderManager.schedule(it.id, it.date, it.noteId)
-            }
     }
 
     fun setLayoutMode(layoutMode: LayoutMode) {

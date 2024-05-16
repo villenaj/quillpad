@@ -11,7 +11,6 @@ import org.junit.Test
 import org.qosp.notes.data.model.Note
 import org.qosp.notes.data.model.Reminder
 import org.qosp.notes.data.repo.NoteRepository
-import org.qosp.notes.data.repo.ReminderRepository
 import org.qosp.notes.di.NO_SYNC
 import java.time.Instant
 import javax.inject.Inject

@@ -86,7 +86,6 @@ import org.qosp.notes.ui.media.MediaActivity
 import org.qosp.notes.ui.recorder.RECORDED_ATTACHMENT
 import org.qosp.notes.ui.recorder.RECORD_CODE
 import org.qosp.notes.ui.recorder.RecordAudioDialog
-import org.qosp.notes.ui.reminders.EditReminderDialog
 import org.qosp.notes.ui.tasks.TaskRecyclerListener
 import org.qosp.notes.ui.tasks.TaskViewHolder
 import org.qosp.notes.ui.tasks.TasksAdapter
@@ -1120,12 +1119,9 @@ class EditorFragment : BaseFragment(R.layout.fragment_editor) {
                 val reminderDate = LocalDateTime.ofEpochSecond(reminder.date, 0, offset)
 
                 action(reminder.name + " (${reminderDate.format(formatter)})", R.drawable.ic_bell) {
-                    if (checkSchedulePermission()) EditReminderDialog.build(note.id, reminder)
-                        .show(parentFragmentManager, null)
                 }
             }
             action(R.string.action_new_reminder, R.drawable.ic_add) {
-                if (checkSchedulePermission()) EditReminderDialog.build(note.id, null).show(parentFragmentManager, null)
             }
         }
     }
