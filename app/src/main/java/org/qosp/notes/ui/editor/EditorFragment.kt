@@ -14,7 +14,11 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
-import android.view.*
+import android.view.ContextThemeWrapper
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.activity.addCallback
@@ -74,7 +78,10 @@ import org.qosp.notes.ui.common.showMoveToNotebookDialog
 import org.qosp.notes.ui.editor.dialog.InsertHyperlinkDialog
 import org.qosp.notes.ui.editor.dialog.InsertImageDialog
 import org.qosp.notes.ui.editor.dialog.InsertTableDialog
-import org.qosp.notes.ui.editor.markdown.*
+import org.qosp.notes.ui.editor.markdown.MarkdownSpan
+import org.qosp.notes.ui.editor.markdown.applyTo
+import org.qosp.notes.ui.editor.markdown.insertMarkdown
+import org.qosp.notes.ui.editor.markdown.toggleCheckmarkCurrentLine
 import org.qosp.notes.ui.media.MediaActivity
 import org.qosp.notes.ui.recorder.RECORDED_ATTACHMENT
 import org.qosp.notes.ui.recorder.RECORD_CODE
@@ -83,7 +90,21 @@ import org.qosp.notes.ui.reminders.EditReminderDialog
 import org.qosp.notes.ui.tasks.TaskRecyclerListener
 import org.qosp.notes.ui.tasks.TaskViewHolder
 import org.qosp.notes.ui.tasks.TasksAdapter
-import org.qosp.notes.ui.utils.*
+import org.qosp.notes.ui.utils.ChooseFilesContract
+import org.qosp.notes.ui.utils.TakePictureContract
+import org.qosp.notes.ui.utils.collect
+import org.qosp.notes.ui.utils.dp
+import org.qosp.notes.ui.utils.getDimensionAttribute
+import org.qosp.notes.ui.utils.getDrawableCompat
+import org.qosp.notes.ui.utils.hideKeyboard
+import org.qosp.notes.ui.utils.liftAppBarOnScroll
+import org.qosp.notes.ui.utils.navigateSafely
+import org.qosp.notes.ui.utils.requestFocusAndKeyboard
+import org.qosp.notes.ui.utils.resId
+import org.qosp.notes.ui.utils.resolveAttribute
+import org.qosp.notes.ui.utils.shareAttachment
+import org.qosp.notes.ui.utils.shareNote
+import org.qosp.notes.ui.utils.viewBinding
 import org.qosp.notes.ui.utils.views.BottomSheet
 import java.time.Instant
 import java.time.LocalDateTime
@@ -655,7 +676,7 @@ class EditorFragment : BaseFragment(R.layout.fragment_editor) {
         findItem(R.id.action_restore_note)?.isVisible = note.isDeleted
         findItem(R.id.action_delete_permanently_note)?.isVisible = note.isDeleted
         findItem(R.id.action_delete_note)?.isVisible = !note.isDeleted
-        findItem(R.id.action_view_tags)?.isVisible = !note.isDeleted
+        findItem(R.id.action_view_tags)?.isVisible = false
         findItem(R.id.action_change_color)?.isVisible = !note.isDeleted
         findItem(R.id.action_attach_file)?.isVisible = !note.isDeleted
         findItem(R.id.action_record_audio)?.isVisible = !note.isDeleted
@@ -688,23 +709,23 @@ class EditorFragment : BaseFragment(R.layout.fragment_editor) {
 
         findItem(R.id.action_archive_note)?.apply {
             title = if (note.isArchived) getString(R.string.action_unarchive) else getString(R.string.action_archive)
-            isVisible = !note.isDeleted
+            isVisible = false
         }
 
         findItem(R.id.action_enable_disable_markdown)?.apply {
             title =
                 if (note.isMarkdownEnabled) getString(R.string.action_disable_markdown) else getString(R.string.action_enable_markdown)
-            isVisible = !note.isDeleted
+            isVisible = false
         }
 
         findItem(R.id.action_hide_note)?.apply {
             isChecked = note.isHidden
-            isVisible = !note.isDeleted
+            isVisible = false
         }
 
         findItem(R.id.action_do_not_sync)?.apply {
             isChecked = note.isLocalOnly
-            isVisible = !note.isDeleted
+            isVisible = false
         }
     }
 
@@ -834,7 +855,7 @@ class EditorFragment : BaseFragment(R.layout.fragment_editor) {
             formatter =
                 DateTimeFormatter.ofPattern("${getString(dateFormat.patternResource)}, ${getString(timeFormat.patternResource)}")
 
-            textViewDate.isVisible = data.showDates
+            textViewDate.isVisible = false
             if (formatter != null && data.showDates) {
                 textViewDate.text =
                     getString(

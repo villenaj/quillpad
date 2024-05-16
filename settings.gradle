@@ -9,4 +9,4 @@ pluginManagement {
 }
 
 include ':app'
-rootProject.name = "quillpad"
+rootProject.name = "sample"

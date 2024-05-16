@@ -43,10 +43,10 @@ class AboutFragment : BaseFragment(resId = R.layout.fragment_about) {
             binding.layoutAppBar.appBar,
             requireContext().resources.getDimension(R.dimen.app_bar_elevation)
         )
-        binding.appVersion.subText = BuildConfig.VERSION_NAME
+        binding.appVersion.subText = "1.0.0"
 
         if (!BuildConfig.IS_GOOGLE) {
-            binding.actionSupport.isVisible = true
+            binding.actionSupport.isVisible = false
         }
     }
 
