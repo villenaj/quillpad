@@ -16,7 +16,9 @@ import org.qosp.notes.data.model.Tag
 import org.qosp.notes.data.repo.IdMappingRepository
 import org.qosp.notes.data.repo.NoteRepository
 import org.qosp.notes.data.repo.NotebookRepository
+import org.qosp.notes.data.repo.ReminderRepository
 import org.qosp.notes.ui.attachments.getAttachmentUri
+import org.qosp.notes.ui.reminders.ReminderManager
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
@@ -30,7 +32,9 @@ class BackupManager(
     private val currentVersion: Int,
     private val noteRepository: NoteRepository,
     private val notebookRepository: NotebookRepository,
+    private val reminderRepository: ReminderRepository,
     private val idMappingRepository: IdMappingRepository,
+    private val reminderManager: ReminderManager,
     private val context: Context,
 ) {
     private val BUFFER = 2048
@@ -62,6 +66,9 @@ class BackupManager(
             val mappings = idMappingRepository.getAllByLocalId(note.id)
             idMappings.addAll(mappings)
 
+            val noteReminders = reminderRepository.getByNoteId(note.id).first()
+            reminders.addAll(noteReminders)
+
             val newAttachments = mutableListOf<Attachment>()
             note.attachments.forEach { old ->
                 attachmentHandler
@@ -76,7 +83,6 @@ class BackupManager(
 
     suspend fun restoreNotesFromBackup(backup: Backup) {
         val notebooksMap = mutableMapOf<Long, Long>()
-        val tagsMap = mutableMapOf<Long, Long>()
         val notesMap = mutableMapOf<Long, Long>()
 
         backup.notebooks.forEach { notebook ->
@@ -87,6 +93,7 @@ class BackupManager(
                 notebooksMap[notebook.id] = notebookRepository.insert(notebook.copy(id = 0L))
             }
         }
+
 
         backup.notes.forEach { note ->
             val newNote = note.copy(
@@ -117,6 +124,12 @@ class BackupManager(
             if (reminder.hasExpired()) return@forEach
 
             val noteId = notesMap[reminder.noteId] ?: return@forEach
+            val reminderId = reminderRepository.insert(reminder.copy(id = 0L, noteId = noteId))
+            reminderManager.schedule(
+                reminderId = reminderId,
+                noteId = noteId,
+                dateTime = reminder.date
+            )
         }
     }
 

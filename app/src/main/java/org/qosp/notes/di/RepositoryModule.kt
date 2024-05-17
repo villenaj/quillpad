@@ -8,6 +8,7 @@ import org.qosp.notes.data.AppDatabase
 import org.qosp.notes.data.repo.IdMappingRepository
 import org.qosp.notes.data.repo.NoteRepository
 import org.qosp.notes.data.repo.NotebookRepository
+import org.qosp.notes.data.repo.ReminderRepository
 import org.qosp.notes.data.sync.core.SyncManager
 import javax.inject.Named
 import javax.inject.Singleton
@@ -47,6 +48,9 @@ object RepositoryModule {
     ) = NoteRepository(appDatabase.noteDao, appDatabase.idMappingDao, appDatabase.reminderDao, null)
 
 
+    @Provides
+    @Singleton
+    fun provideReminderRepository(appDatabase: AppDatabase) = ReminderRepository(appDatabase.reminderDao)
 
     @Provides
     @Singleton
