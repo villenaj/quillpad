@@ -43,18 +43,13 @@ class MainActivity : BaseActivity() {
 
     private val primaryDestinations = setOf(
         R.id.fragment_main,
-//        R.id.fragment_archive,
         R.id.fragment_deleted,
-//        R.id.fragment_notebook
     )
     private val secondaryDestinations = setOf(
         R.id.fragment_about,
         R.id.fragment_editor,
-//        R.id.fragment_manage_notebooks,
         R.id.fragment_search,
-//        R.id.fragment_sync_settings,
         R.id.fragment_settings,
-//        R.id.fragment_tags,
     )
 
     @Inject

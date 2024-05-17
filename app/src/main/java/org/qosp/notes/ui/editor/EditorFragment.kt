@@ -699,27 +699,6 @@ class EditorFragment : BaseFragment(R.layout.fragment_editor) {
             setIcon(if (hasReminders) R.drawable.ic_bell_filled else R.drawable.ic_bell)
             isVisible = !note.isDeleted
         }
-
-        findItem(R.id.action_archive_note)?.apply {
-            title = if (note.isArchived) getString(R.string.action_unarchive) else getString(R.string.action_archive)
-            isVisible = false
-        }
-
-        findItem(R.id.action_enable_disable_markdown)?.apply {
-            title =
-                if (note.isMarkdownEnabled) getString(R.string.action_disable_markdown) else getString(R.string.action_enable_markdown)
-            isVisible = false
-        }
-
-        findItem(R.id.action_hide_note)?.apply {
-            isChecked = note.isHidden
-            isVisible = false
-        }
-
-        findItem(R.id.action_do_not_sync)?.apply {
-            isChecked = note.isLocalOnly
-            isVisible = false
-        }
     }
 
     private fun observeData() = with(binding) {
