@@ -15,8 +15,9 @@ import org.qosp.notes.data.repo.IdMappingRepository
 import org.qosp.notes.data.repo.NoteRepository
 import org.qosp.notes.data.repo.NotebookRepository
 import org.qosp.notes.data.repo.ReminderRepository
+import org.qosp.notes.data.repo.TagRepository
 import org.qosp.notes.data.sync.core.SyncManager
-import org.qosp.notes.data.sync.local.NextcloudManager
+import org.qosp.notes.data.sync.nextcloud.NextcloudManager
 import org.qosp.notes.preferences.PreferenceRepository
 import org.qosp.notes.ui.reminders.ReminderManager
 import org.qosp.notes.ui.utils.ConnectionManager
@@ -61,6 +62,7 @@ object UtilModule {
     fun provideBackupManager(
         noteRepository: NoteRepository,
         notebookRepository: NotebookRepository,
+        tagRepository: TagRepository,
         reminderRepository: ReminderRepository,
         idMappingRepository: IdMappingRepository,
         reminderManager: ReminderManager,
@@ -69,6 +71,7 @@ object UtilModule {
         BuildConfig.VERSION_CODE,
         noteRepository,
         notebookRepository,
+        tagRepository,
         reminderRepository,
         idMappingRepository,
         reminderManager,

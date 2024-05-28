@@ -17,6 +17,7 @@ import org.qosp.notes.data.repo.IdMappingRepository
 import org.qosp.notes.data.repo.NoteRepository
 import org.qosp.notes.data.repo.NotebookRepository
 import org.qosp.notes.data.repo.ReminderRepository
+import org.qosp.notes.data.repo.TagRepository
 import org.qosp.notes.ui.attachments.getAttachmentUri
 import org.qosp.notes.ui.reminders.ReminderManager
 import java.io.BufferedInputStream
@@ -32,6 +33,7 @@ class BackupManager(
     private val currentVersion: Int,
     private val noteRepository: NoteRepository,
     private val notebookRepository: NotebookRepository,
+    private val tagRepository: TagRepository,
     private val reminderRepository: ReminderRepository,
     private val idMappingRepository: IdMappingRepository,
     private val reminderManager: ReminderManager,
@@ -63,11 +65,17 @@ class BackupManager(
                 notebooks.add(notebook)
             }
 
-            val mappings = idMappingRepository.getAllByLocalId(note.id)
-            idMappings.addAll(mappings)
-
             val noteReminders = reminderRepository.getByNoteId(note.id).first()
             reminders.addAll(noteReminders)
+
+            val noteTags = tagRepository.getByNoteId(note.id).first()
+            tags.addAll(noteTags)
+
+            val noteTagJoins = noteTags.map { tag -> NoteTagJoin(tag.id, note.id) }
+            joins.addAll(noteTagJoins)
+
+            val mappings = idMappingRepository.getAllByLocalId(note.id)
+            idMappings.addAll(mappings)
 
             val newAttachments = mutableListOf<Attachment>()
             note.attachments.forEach { old ->
@@ -83,6 +91,7 @@ class BackupManager(
 
     suspend fun restoreNotesFromBackup(backup: Backup) {
         val notebooksMap = mutableMapOf<Long, Long>()
+        val tagsMap = mutableMapOf<Long, Long>()
         val notesMap = mutableMapOf<Long, Long>()
 
         backup.notebooks.forEach { notebook ->
@@ -94,6 +103,14 @@ class BackupManager(
             }
         }
 
+        backup.tags.forEach { tag ->
+            val existingTag = tagRepository.getByName(tag.name).firstOrNull()
+            if (existingTag != null) {
+                tagsMap[tag.id] = existingTag.id
+                return@forEach
+            }
+            tagsMap[tag.id] = tagRepository.insert(tag.copy(id = 0L))
+        }
 
         backup.notes.forEach { note ->
             val newNote = note.copy(
@@ -118,6 +135,12 @@ class BackupManager(
             val newMapping = it.copy(mappingId = 0L, localNoteId = noteId)
 
             idMappingRepository.assignProviderToNote(newMapping)
+        }
+
+        backup.joins.forEach { join ->
+            val tagId = tagsMap[join.tagId] ?: return@forEach
+            val noteId = notesMap[join.noteId] ?: return@forEach
+            tagRepository.addTagToNote(tagId, noteId)
         }
 
         backup.reminders.forEach { reminder ->

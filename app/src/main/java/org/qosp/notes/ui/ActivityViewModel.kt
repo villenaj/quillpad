@@ -23,6 +23,7 @@ import org.qosp.notes.data.model.Notebook
 import org.qosp.notes.data.repo.NoteRepository
 import org.qosp.notes.data.repo.NotebookRepository
 import org.qosp.notes.data.repo.ReminderRepository
+import org.qosp.notes.data.repo.TagRepository
 import org.qosp.notes.data.sync.core.BaseResult
 import org.qosp.notes.data.sync.core.SyncManager
 import org.qosp.notes.preferences.GroupNotesWithoutNotebook
@@ -41,6 +42,7 @@ class ActivityViewModel @Inject constructor(
     private val preferenceRepository: PreferenceRepository,
     private val reminderRepository: ReminderRepository,
     private val reminderManager: ReminderManager,
+    private val tagRepository: TagRepository,
     private val mediaStorageManager: MediaStorageManager,
     private val syncManager: SyncManager,
 ) : ViewModel() {
@@ -86,6 +88,7 @@ class ActivityViewModel @Inject constructor(
     fun deleteNotes(vararg notes: Note) {
         viewModelScope.launch(Dispatchers.IO) {
             notes.forEach { reminderManager.cancelAllRemindersForNote(it.id) }
+
             when (preferenceRepository.get<NoteDeletionTime>().first()) {
                 NoteDeletionTime.INSTANTLY -> {
                     noteRepository.deleteNotes(*notes)
@@ -201,6 +204,7 @@ class ActivityViewModel @Inject constructor(
         )
 
         val newId = noteRepository.insertNote(cloned)
+        tagRepository.copyTags(oldId, newId)
         reminderRepository.copyReminders(oldId, newId)
 
         reminderRepository

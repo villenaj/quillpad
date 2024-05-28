@@ -11,8 +11,8 @@ import okhttp3.MediaType.Companion.toMediaType
 import org.qosp.notes.data.repo.IdMappingRepository
 import org.qosp.notes.data.repo.NoteRepository
 import org.qosp.notes.data.repo.NotebookRepository
-import org.qosp.notes.data.sync.local.NextcloudAPI
-import org.qosp.notes.data.sync.local.NextcloudManager
+import org.qosp.notes.data.sync.nextcloud.NextcloudAPI
+import org.qosp.notes.data.sync.nextcloud.NextcloudManager
 import retrofit2.Retrofit
 import retrofit2.create
 import javax.inject.Named
@@ -20,7 +20,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object LocalModule {
+object NextcloudModule {
     private val json = Json { ignoreUnknownKeys = true }
 
     @OptIn(ExperimentalSerializationApi::class)

@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:transitionGroup="true"
@@ -61,109 +60,88 @@
                     app:text="@string/preferences_color_scheme"
                     app:iconSrc="@drawable/ic_color"/>
 
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorOutline"/>
+
+            <!-- View -->
+            <!-- Notebook -->
+            <TextView
+                    android:text="@string/preferences_header_view"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/inter_font_family"
+                    android:textColor="?attr/colorPrimary"
+                    android:paddingTop="16dp"
+                    android:paddingLeft="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                android:text="@string/preferences_header_view_notebook"
+                android:fontFamily="@font/inter_font_family"
+                android:textColor="?attr/colorSecondary"
+                android:padding="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <org.qosp.notes.ui.utils.views.PreferenceView
+                    android:id="@+id/setting_layout_mode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:text="@string/preferences_layout_mode"
+                    app:iconSrc="@drawable/ic_grid"/>
+
+            <org.qosp.notes.ui.utils.views.PreferenceView
+                    android:id="@+id/setting_sort_method"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:text="@string/preferences_sort_method"
+                    app:iconSrc="@drawable/ic_sort"/>
+
+            <!-- Note content -->
+            <TextView
+                android:text="@string/preferences_header_view_note_content"
+                android:fontFamily="@font/inter_font_family"
+                android:textColor="?attr/colorSecondary"
+                android:padding="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
             <org.qosp.notes.ui.utils.views.PreferenceView
                 android:id="@+id/setting_font_size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:iconSrc="@drawable/ic_search"
-                app:text="@string/preferences_font_size" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?attr/colorOutline"
-                android:visibility="gone"
-                tools:visibility="gone" />
-
-            <!-- View -->
-            <!-- Notebook -->
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_font_family"
-                android:paddingLeft="16dp"
-                android:paddingTop="16dp"
-                android:text="@string/preferences_header_view"
-                android:textColor="?attr/colorPrimary"
-                android:textStyle="bold"
-                android:visibility="gone"
-                tools:visibility="gone" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_font_family"
-                android:padding="16dp"
-                android:text="@string/preferences_header_view_notebook"
-                android:textColor="?attr/colorSecondary"
-                android:visibility="gone"
-                tools:visibility="gone" />
-
-            <org.qosp.notes.ui.utils.views.PreferenceView
-                android:id="@+id/setting_layout_mode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:iconSrc="@drawable/ic_grid"
-                app:text="@string/preferences_layout_mode"
-                tools:visibility="gone" />
-
-            <org.qosp.notes.ui.utils.views.PreferenceView
-                android:id="@+id/setting_sort_method"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:iconSrc="@drawable/ic_sort"
-                app:text="@string/preferences_sort_method"
-                tools:visibility="gone" />
-
-            <!-- Note content -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_font_family"
-                android:padding="16dp"
-                android:text="@string/preferences_header_view_note_content"
-                android:textColor="?attr/colorSecondary"
-                android:visibility="gone"
-                tools:visibility="gone" />
+                app:text="@string/preferences_font_size"
+                app:iconSrc="@drawable/ic_search"/>
 
             <org.qosp.notes.ui.utils.views.PreferenceView
                 android:id="@+id/setting_show_fab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:iconSrc="@drawable/ic_pencil"
                 app:text="@string/preferences_show_fab_change_mode"
-                tools:visibility="gone" />
+                app:iconSrc="@drawable/ic_pencil"/>
 
             <org.qosp.notes.ui.utils.views.PreferenceView
-                android:id="@+id/setting_show_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:iconSrc="@drawable/ic_date_time"
-                app:text="@string/preferences_show_date"
-                tools:visibility="gone" />
+                    android:id="@+id/setting_show_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:text="@string/preferences_show_date"
+                    app:iconSrc="@drawable/ic_date_time"/>
 
             <org.qosp.notes.ui.utils.views.PreferenceView
-                android:id="@+id/setting_date_format"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:iconSrc="@drawable/ic_date"
-                app:text="@string/preferences_date_format"
-                tools:visibility="gone" />
+                    android:id="@+id/setting_date_format"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:text="@string/preferences_date_format"
+                    app:iconSrc="@drawable/ic_date"/>
 
             <org.qosp.notes.ui.utils.views.PreferenceView
-                android:id="@+id/setting_time_format"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:iconSrc="@drawable/ic_time"
-                app:text="@string/preferences_time_format"
-                tools:visibility="gone" />
+                    android:id="@+id/setting_time_format"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:text="@string/preferences_time_format"
+                    app:iconSrc="@drawable/ic_time"/>
 
             <View
                     android:layout_width="match_parent"
@@ -188,22 +166,18 @@
                     app:iconSrc="@drawable/ic_music"/>
 
             <org.qosp.notes.ui.utils.views.PreferenceView
-                android:id="@+id/setting_group_notes_without_notebook"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:iconSrc="@drawable/ic_notebook"
-                app:text="@string/preferences_group_notes_without_notebook"
-                tools:visibility="gone" />
+                    android:id="@+id/setting_group_notes_without_notebook"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:text="@string/preferences_group_notes_without_notebook"
+                    app:iconSrc="@drawable/ic_notebook"/>
 
             <org.qosp.notes.ui.utils.views.PreferenceView
                 android:id="@+id/setting_move_checked_items"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:iconSrc="@drawable/ic_box_checked_outline"
                 app:text="@string/preferences_move_checked_items"
-                tools:visibility="gone" />
+                app:iconSrc="@drawable/ic_box_checked_outline"/>
 
             <org.qosp.notes.ui.utils.views.PreferenceView
                     android:id="@+id/setting_note_deletion"
@@ -219,44 +193,36 @@
 
             <!-- Backup -->
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_font_family"
-                android:padding="16dp"
-                android:text="@string/preferences_header_backup"
-                android:textColor="?attr/colorPrimary"
-                android:textStyle="bold"
-                android:visibility="gone"
-                tools:visibility="gone" />
+                    android:text="@string/preferences_header_backup"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/inter_font_family"
+                    android:textColor="?attr/colorPrimary"
+                    android:padding="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
             <org.qosp.notes.ui.utils.views.PreferenceView
-                android:id="@+id/setting_backup_notes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:iconSrc="@drawable/ic_export_all"
-                app:subText="@string/preferences_create_backup_subtext"
-                app:text="@string/preferences_create_backup"
-                tools:visibility="gone" />
+                    android:id="@+id/setting_backup_notes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:text="@string/preferences_create_backup"
+                    app:subText="@string/preferences_create_backup_subtext"
+                    app:iconSrc="@drawable/ic_export_all"/>
 
             <org.qosp.notes.ui.utils.views.PreferenceView
-                android:id="@+id/setting_restore_notes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:iconSrc="@drawable/ic_restore"
-                app:subText="@string/preferences_restore_subtext"
-                app:text="@string/preferences_restore"
-                tools:visibility="gone" />
+                    android:id="@+id/setting_restore_notes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:text="@string/preferences_restore"
+                    app:subText="@string/preferences_restore_subtext"
+                    app:iconSrc="@drawable/ic_restore"/>
 
             <org.qosp.notes.ui.utils.views.PreferenceView
-                android:id="@+id/setting_backup_strategy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:iconSrc="@drawable/ic_backup_settings"
-                app:text="@string/preferences_backup_strategy"
-                tools:visibility="gone" />
+                    android:id="@+id/setting_backup_strategy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:text="@string/preferences_backup_strategy"
+                    app:iconSrc="@drawable/ic_backup_settings"/>
 
             <View
                     android:layout_width="match_parent"
@@ -265,25 +231,21 @@
 
             <!-- Syncing -->
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_font_family"
-                android:padding="16dp"
-                android:text="@string/preferences_header_syncing"
-                android:textColor="?attr/colorPrimary"
-                android:textStyle="bold"
-                android:visibility="gone"
-                tools:visibility="gone" />
+                    android:text="@string/preferences_header_syncing"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/inter_font_family"
+                    android:textColor="?attr/colorPrimary"
+                    android:padding="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
             <org.qosp.notes.ui.utils.views.PreferenceView
-                android:id="@+id/setting_go_to_sync_settings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:iconSrc="@drawable/ic_sync_settings"
-                app:subText="@string/preferences_currently_syncing_with"
-                app:text="@string/preferences_go_to_sync_settings"
-                tools:visibility="gone" />
+                    android:id="@+id/setting_go_to_sync_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:text="@string/preferences_go_to_sync_settings"
+                    app:subText="@string/preferences_currently_syncing_with"
+                    app:iconSrc="@drawable/ic_sync_settings"/>
         </LinearLayout>
     </ScrollView>
 

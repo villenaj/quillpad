@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:tools="http://schemas.android.com/tools"
-      xmlns:android="http://schemas.android.com/apk/res/android"
+<menu
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- Change editor between view and edit mode -->
@@ -8,10 +8,8 @@
         android:id="@+id/action_change_mode"
         android:icon="@drawable/ic_show"
         android:title="@string/action_change_mode"
-        android:visibility="gone"
         android:visible="false"
-        app:showAsAction="ifRoom"
-        tools:visibility="gone" />
+        app:showAsAction="ifRoom"/>
     <item
             android:id="@+id/action_pin_note"
             android:icon="@drawable/ic_pin"
@@ -41,12 +39,10 @@
             android:visible="false"
             app:showAsAction="never"/>
     <item
-        android:id="@+id/action_archive_note"
-        android:title="@string/action_archive"
-        android:visibility="gone"
-        android:visible="false"
-        app:showAsAction="never"
-        tools:visibility="gone" />
+            android:id="@+id/action_archive_note"
+            android:title="@string/action_archive"
+            android:visible="false"
+            app:showAsAction="never"/>
     <item
             android:id="@+id/action_delete_note"
             android:title="@string/action_delete"
@@ -60,26 +56,22 @@
             android:visible="false"
             app:showAsAction="never"/>
     <item
-        android:id="@+id/action_do_not_sync"
-        android:checkable="true"
-        android:checked="false"
-        android:title="@string/action_do_not_sync"
-        android:visibility="gone"
-        android:visible="false"
-        app:showAsAction="never"
-        tools:visibility="gone" />
+            android:id="@+id/action_do_not_sync"
+            android:title="@string/action_do_not_sync"
+            android:checkable="true"
+            android:checked="false"
+            android:visible="false"
+            app:showAsAction="never"/>
     <item
             android:id="@+id/action_change_color"
             android:title="@string/action_change_color"
             android:visible="false"
             app:showAsAction="never"/>
     <item
-        android:id="@+id/action_enable_disable_markdown"
-        android:title="@string/action_enable_markdown"
-        android:visibility="gone"
-        android:visible="false"
-        app:showAsAction="never"
-        tools:visibility="gone" />
+            android:id="@+id/action_enable_disable_markdown"
+            android:title="@string/action_enable_markdown"
+            android:visible="false"
+            app:showAsAction="never"/>
     <item
             android:id="@+id/action_attach_file"
             android:title="@string/action_attach_files"
@@ -96,12 +88,10 @@
             android:visible="false"
             app:showAsAction="never"/>
     <item
-        android:id="@+id/action_view_tags"
-        android:title="@string/nav_tags"
-        android:visibility="gone"
-        android:visible="false"
-        app:showAsAction="never"
-        tools:visibility="gone" />
+            android:id="@+id/action_view_tags"
+            android:title="@string/nav_tags"
+            android:visible="false"
+            app:showAsAction="never"/>
     <item
             android:id="@+id/action_export_note"
             android:title="@string/action_export"
