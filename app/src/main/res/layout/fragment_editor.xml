@@ -16,25 +16,26 @@
             app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
-                android:background="?attr/colorBackground"
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:titleTextAppearance="@style/TextAppearance.Custom.Title"
-                app:contentInsetStartWithNavigation="0dp">
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorBackground"
+            app:contentInsetStartWithNavigation="0dp"
+            app:titleTextAppearance="@style/TextAppearance.Custom.Title">
 
             <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_gravity="start"
-                    android:id="@+id/notebook_view"
-                    android:text="@string/notebooks_unassigned"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.Custom.Title"
-                    android:textSize="17sp"
-                    android:drawablePadding="8dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    style="@style/NotebookChip"/>
+                android:id="@+id/notebook_view"
+                style="@style/NotebookChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:clickable="true"
+                android:drawablePadding="8dp"
+                android:focusable="true"
+                android:text="@string/notebooks_unassigned"
+                android:textAppearance="@style/TextAppearance.Custom.Title"
+                android:textSize="17sp"
+                android:visibility="invisible" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 

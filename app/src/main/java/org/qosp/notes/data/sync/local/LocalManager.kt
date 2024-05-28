@@ -1,4 +1,4 @@
-package org.qosp.notes.data.sync.nextcloud
+package org.qosp.notes.data.sync.local
 
 import kotlinx.coroutines.flow.first
 import org.qosp.notes.data.model.IdMapping
@@ -17,9 +17,9 @@ import org.qosp.notes.data.sync.core.ServerNotSupportedException
 import org.qosp.notes.data.sync.core.Success
 import org.qosp.notes.data.sync.core.SyncProvider
 import org.qosp.notes.data.sync.core.Unauthorized
-import org.qosp.notes.data.sync.nextcloud.model.NextcloudNote
-import org.qosp.notes.data.sync.nextcloud.model.asNewLocalNote
-import org.qosp.notes.data.sync.nextcloud.model.asNextcloudNote
+import org.qosp.notes.data.sync.local.model.LocalNote
+import org.qosp.notes.data.sync.local.model.asNewLocalNote
+import org.qosp.notes.data.sync.local.model.asNextcloudNote
 import org.qosp.notes.preferences.CloudService
 import retrofit2.HttpException
 
@@ -34,7 +34,7 @@ class NextcloudManager(
         note: Note,
         config: ProviderConfig
     ): BaseResult {
-        if (config !is NextcloudConfig) return InvalidConfig
+        if (config !is LocalConfig) return InvalidConfig
 
         val nextcloudNote = note.asNextcloudNote()
 
@@ -58,7 +58,7 @@ class NextcloudManager(
         note: Note,
         config: ProviderConfig
     ): BaseResult {
-        if (config !is NextcloudConfig) return InvalidConfig
+        if (config !is LocalConfig) return InvalidConfig
 
         val nextcloudNote = note.asNextcloudNote()
 
@@ -71,7 +71,7 @@ class NextcloudManager(
     }
 
     override suspend fun moveNoteToBin(note: Note, config: ProviderConfig): BaseResult {
-        if (config !is NextcloudConfig) return InvalidConfig
+        if (config !is LocalConfig) return InvalidConfig
 
         val nextcloudNote = note.asNextcloudNote()
 
@@ -89,7 +89,7 @@ class NextcloudManager(
         note: Note,
         config: ProviderConfig
     ): BaseResult {
-        if (config !is NextcloudConfig) return InvalidConfig
+        if (config !is LocalConfig) return InvalidConfig
 
         val nextcloudNote = note.asNextcloudNote()
 
@@ -101,7 +101,7 @@ class NextcloudManager(
     }
 
     override suspend fun authenticate(config: ProviderConfig): BaseResult {
-        if (config !is NextcloudConfig) return InvalidConfig
+        if (config !is LocalConfig) return InvalidConfig
 
         return tryCalling {
             nextcloudAPI.testCredentials(config)
@@ -109,7 +109,7 @@ class NextcloudManager(
     }
 
     override suspend fun isServerCompatible(config: ProviderConfig): BaseResult {
-        if (config !is NextcloudConfig) return InvalidConfig
+        if (config !is LocalConfig) return InvalidConfig
 
         return tryCalling {
             val capabilities = nextcloudAPI.getNotesCapabilities(config)!!
@@ -120,9 +120,9 @@ class NextcloudManager(
     }
 
     override suspend fun sync(config: ProviderConfig): BaseResult {
-        if (config !is NextcloudConfig) return InvalidConfig
+        if (config !is LocalConfig) return InvalidConfig
 
-        suspend fun handleConflict(local: Note, remote: NextcloudNote, mapping: IdMapping) {
+        suspend fun handleConflict(local: Note, remote: LocalNote, mapping: IdMapping) {
             if (mapping.isDeletedLocally) return
 
             if (remote.modified < local.modifiedDate) {
@@ -220,9 +220,9 @@ class NextcloudManager(
 
     private suspend fun updateNoteWithEtag(
         note: Note,
-        nextcloudNote: NextcloudNote,
+        nextcloudNote: LocalNote,
         etag: String? = null,
-        config: NextcloudConfig
+        config: LocalConfig
     ) {
         val cloudId = idMappingRepository.getByRemoteId(nextcloudNote.id, CloudService.NEXTCLOUD) ?: return
         val etag = etag ?: cloudId.extras
@@ -237,13 +237,13 @@ class NextcloudManager(
         )
     }
 
-    private suspend fun Note.asNextcloudNote(newId: Long? = null): NextcloudNote {
+    private suspend fun Note.asNextcloudNote(newId: Long? = null): LocalNote {
         val id = newId ?: idMappingRepository.getByLocalIdAndProvider(id, CloudService.NEXTCLOUD)?.remoteNoteId
         val notebookName = notebookId?.let { notebookRepository.getById(it).first()?.name }
         return asNextcloudNote(id = id ?: 0L, category = notebookName ?: "")
     }
 
-    private suspend fun NextcloudNote.asUpdatedLocalNote(note: Note) = note.copy(
+    private suspend fun LocalNote.asUpdatedLocalNote(note: Note) = note.copy(
         title = title,
         taskList = if (note.isList) note.mdToTaskList(content) else listOf(),
         content = content,
@@ -252,7 +252,7 @@ class NextcloudManager(
         notebookId = getNotebookIdForCategory(category)
     )
 
-    private suspend fun NextcloudNote.asNewLocalNote(newId: Long? = null): Note {
+    private suspend fun LocalNote.asNewLocalNote(newId: Long? = null): Note {
         val id = newId ?: idMappingRepository.getByRemoteId(id, CloudService.NEXTCLOUD)?.localNoteId
         val notebookId = getNotebookIdForCategory(category)
         return asNewLocalNote(id = id ?: 0L, notebookId = notebookId)

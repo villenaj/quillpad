@@ -1,4 +1,4 @@
-package org.qosp.notes.data.sync.nextcloud
+package org.qosp.notes.data.sync.local
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -6,8 +6,8 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.jsonObject
 import okhttp3.ResponseBody
-import org.qosp.notes.data.sync.nextcloud.model.NextcloudCapabilities
-import org.qosp.notes.data.sync.nextcloud.model.NextcloudNote
+import org.qosp.notes.data.sync.local.model.LocalCapabilities
+import org.qosp.notes.data.sync.local.model.LocalNote
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -24,28 +24,28 @@ interface NextcloudAPI {
     suspend fun getNotesAPI(
         @Url url: String,
         @Header("Authorization") auth: String,
-    ): List<NextcloudNote>
+    ): List<LocalNote>
 
     @GET
     suspend fun getNoteAPI(
         @Url url: String,
         @Header("Authorization") auth: String,
-    ): NextcloudNote
+    ): LocalNote
 
     @POST
     suspend fun createNoteAPI(
-        @Body note: NextcloudNote,
+        @Body note: LocalNote,
         @Url url: String,
         @Header("Authorization") auth: String,
-    ): NextcloudNote
+    ): LocalNote
 
     @PUT
     suspend fun updateNoteAPI(
-        @Body note: NextcloudNote,
+        @Body note: LocalNote,
         @Url url: String,
         @Header("If-Match") etag: String,
         @Header("Authorization") auth: String,
-    ): NextcloudNote
+    ): LocalNote
 
     @DELETE
     suspend fun deleteNoteAPI(
@@ -64,7 +64,7 @@ interface NextcloudAPI {
     ): ResponseBody
 }
 
-suspend fun NextcloudAPI.getNotesCapabilities(config: NextcloudConfig): NextcloudCapabilities? {
+suspend fun NextcloudAPI.getNotesCapabilities(config: LocalConfig): LocalCapabilities? {
     val endpoint = "ocs/v2.php/cloud/capabilities"
     val fullUrl = config.remoteAddress + endpoint
 
@@ -77,17 +77,17 @@ suspend fun NextcloudAPI.getNotesCapabilities(config: NextcloudConfig): Nextclou
         ?.get("data")?.jsonObject
         ?.get("capabilities")?.jsonObject
         ?.get("notes")
-    return element?.let { Json.decodeFromJsonElement<NextcloudCapabilities>(it) }
+    return element?.let { Json.decodeFromJsonElement<LocalCapabilities>(it) }
 }
 
-suspend fun NextcloudAPI.deleteNote(note: NextcloudNote, config: NextcloudConfig) {
+suspend fun NextcloudAPI.deleteNote(note: LocalNote, config: LocalConfig) {
     deleteNoteAPI(
         url = config.remoteAddress + baseURL + "notes/${note.id}",
         auth = config.credentials,
     )
 }
 
-suspend fun NextcloudAPI.updateNote(note: NextcloudNote, etag: String, config: NextcloudConfig): NextcloudNote {
+suspend fun NextcloudAPI.updateNote(note: LocalNote, etag: String, config: LocalConfig): LocalNote {
     return updateNoteAPI(
         note = note,
         url = config.remoteAddress + baseURL + "notes/${note.id}",
@@ -96,7 +96,7 @@ suspend fun NextcloudAPI.updateNote(note: NextcloudNote, etag: String, config: N
     )
 }
 
-suspend fun NextcloudAPI.createNote(note: NextcloudNote, config: NextcloudConfig): NextcloudNote {
+suspend fun NextcloudAPI.createNote(note: LocalNote, config: LocalConfig): LocalNote {
     return createNoteAPI(
         note = note,
         url = config.remoteAddress + baseURL + "notes",
@@ -104,14 +104,14 @@ suspend fun NextcloudAPI.createNote(note: NextcloudNote, config: NextcloudConfig
     )
 }
 
-suspend fun NextcloudAPI.getNotes(config: NextcloudConfig): List<NextcloudNote> {
+suspend fun NextcloudAPI.getNotes(config: LocalConfig): List<LocalNote> {
     return getNotesAPI(
         url = config.remoteAddress + baseURL + "notes",
         auth = config.credentials,
     )
 }
 
-suspend fun NextcloudAPI.testCredentials(config: NextcloudConfig) {
+suspend fun NextcloudAPI.testCredentials(config: LocalConfig) {
     getNotesAPI(
         url = config.remoteAddress + baseURL + "notes",
         auth = config.credentials,

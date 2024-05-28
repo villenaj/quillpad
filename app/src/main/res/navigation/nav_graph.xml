@@ -19,18 +19,6 @@
     </fragment>
 
     <fragment
-            android:id="@+id/fragment_archive"
-            android:name="org.qosp.notes.ui.archive.ArchiveFragment"
-            android:layout="@layout/fragment_archive">
-        <action
-                android:id="@+id/action_archive_to_editor"
-                app:destination="@id/fragment_editor"/>
-        <action
-                android:id="@+id/action_archive_to_search"
-                app:destination="@id/fragment_search"/>
-    </fragment>
-
-    <fragment
             android:id="@+id/fragment_deleted"
             android:name="org.qosp.notes.ui.deleted.DeletedFragment"
             android:layout="@layout/fragment_deleted">
@@ -70,9 +58,6 @@
             android:layout="@layout/fragment_editor">
         <deepLink app:uri="quillpad://notes/{transitionName}?newNoteIsList={newNoteIsList}" />
 
-        <action
-                android:id="@+id/actionEditorToTags"
-                app:destination="@id/fragment_tags"/>
         <argument
                 android:name="transitionName"
                 app:argType="string"/>
@@ -97,18 +82,6 @@
                   android:defaultValue="@null"
                   app:nullable="true"/>
 
-    </fragment>
-
-    <fragment
-            android:id="@+id/fragment_tags"
-            android:name="org.qosp.notes.ui.tags.TagsFragment">
-        <action
-                android:id="@+id/actionTagsToSearch"
-                app:destination="@+id/fragment_search"/>
-        <argument
-                android:name="noteId"
-                android:defaultValue="0L"
-                app:argType="long"/>
     </fragment>
 
     <fragment

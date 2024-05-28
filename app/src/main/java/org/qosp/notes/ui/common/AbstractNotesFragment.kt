@@ -41,7 +41,6 @@ import org.qosp.notes.ui.common.recycler.NoteRecyclerAdapter
 import org.qosp.notes.ui.common.recycler.NoteRecyclerListener
 import org.qosp.notes.ui.common.recycler.onBackPressedHandler
 import org.qosp.notes.ui.utils.collect
-import org.qosp.notes.ui.utils.launch
 import org.qosp.notes.ui.utils.liftAppBarOnScroll
 import org.qosp.notes.ui.utils.shareNote
 import org.qosp.notes.ui.utils.views.BottomSheet
@@ -83,19 +82,6 @@ abstract class AbstractNotesFragment(@LayoutRes resId: Int) : BaseFragment(resId
     @Inject
     lateinit var markwon: Markwon
 
-    // Bug:
-    //
-    // When clicking on a note but then quickly pressing the back button before the animation takes place
-    // makes the toolbar unusable. This is because the editor fragment gets created and calls setupToolbar() which
-    // makes the editor toolbar active. However clicking the back button before the animation means that the current
-    // fragment is not destroyed yet and thus will not be recreated which means that this fragment's setupToolbar() function
-    // will not be called.
-    //
-    // The fix:
-    //
-    // This fix adds an onDestinationChangedListener to the NavController, which sets the toolbar up
-    // if it's navigating back to the same fragment. This listener gets removed when the view gets destroyed.
-    // For this to work however, each fragment that wants to inherit from this fragment must override currentDestinationId.
     private var isListenerSet = false
     private val destinationChangedListener = object : NavController.OnDestinationChangedListener {
         override fun onDestinationChanged(controller: NavController, destination: NavDestination, arguments: Bundle?) {
@@ -336,17 +322,6 @@ abstract class AbstractNotesFragment(@LayoutRes resId: Int) : BaseFragment(resId
 
             when (item.itemId) {
                 R.id.action_pin_selected -> activityModel.pinNotes(*selectedNotes)
-                R.id.action_compact_preview_selected -> activityModel.compactPreviewNotes(*selectedNotes)
-                R.id.action_full_preview_selected -> activityModel.fullPreviewNotes(*selectedNotes)
-                R.id.action_archive_selected -> {
-                    activityModel.archiveNotes(*selectedNotes)
-                    sendMessage(
-                        if (selectedNotes.size > 1) getString(R.string.indicator_archived_notes) else getString(
-                            R.string.indicator_archive_note
-                        )
-                    )
-                }
-                R.id.action_unarchive -> activityModel.unarchiveNotes(*selectedNotes)
                 R.id.action_restore_selected -> activityModel.restoreNotes(*selectedNotes)
                 R.id.action_delete_selected -> {
                     activityModel.deleteNotes(*selectedNotes)
@@ -366,9 +341,6 @@ abstract class AbstractNotesFragment(@LayoutRes resId: Int) : BaseFragment(resId
                         )
                     )
                 }
-                R.id.action_hide_selected -> activityModel.hideNotes(*selectedNotes)
-                R.id.action_duplicate_selected -> activityModel.duplicateNotes(*selectedNotes)
-                R.id.action_move_selected -> showMoveToNotebookDialog(*selectedNotes)
                 R.id.action_export_selected -> {
                     activityModel.notesToBackup = selectedNotes.toSet()
                     exportNotesLauncher.launch(null)
@@ -460,16 +432,6 @@ abstract class AbstractNotesFragment(@LayoutRes resId: Int) : BaseFragment(resId
                 activityModel.deleteNotesPermanently(note)
                 sendMessage(getString(R.string.indicator_deleted_note_permanently))
             }
-            action(R.string.action_archive, R.drawable.ic_archive_action, condition = !note.isArchived && isNormal) {
-                activityModel.archiveNotes(note)
-                sendMessage(getString(R.string.indicator_archive_note))
-            }
-            action(R.string.action_unarchive, R.drawable.ic_unarchive, condition = note.isArchived) {
-                activityModel.unarchiveNotes(note)
-            }
-            action(R.string.action_move_to, R.drawable.ic_notebook_swap, condition = isNormal) {
-                showMoveToNotebookDialog(note)
-            }
             action(R.string.action_delete, R.drawable.ic_bin, condition = !note.isDeleted) {
                 activityModel.deleteNotes(note)
                 lifecycleScope.launch {
@@ -479,27 +441,6 @@ abstract class AbstractNotesFragment(@LayoutRes resId: Int) : BaseFragment(resId
                         sendMessage(getString(R.string.indicator_moved_note_to_bin))
                     }
                 }
-            }
-            action(R.string.action_show, R.drawable.ic_show, condition = note.isHidden) {
-                activityModel.showNotes(note)
-            }
-            action(R.string.action_hide, R.drawable.ic_hidden, condition = !note.isHidden) {
-                activityModel.hideNotes(note)
-            }
-            action(R.string.action_compact_preview, R.drawable.ic_preview, condition = !note.isCompactPreview) {
-                activityModel.makeNotesCompactPreview(note)
-            }
-            action(R.string.action_full_preview, R.drawable.ic_preview, condition = note.isCompactPreview) {
-                activityModel.makeNotesFullPreview(note)
-            }
-            action(R.string.action_disable_markdown, R.drawable.ic_markdown, condition = !note.isDeleted && note.isMarkdownEnabled) {
-                activityModel.disableMarkdown(note)
-            }
-            action(R.string.action_enable_markdown, R.drawable.ic_markdown, condition = !note.isDeleted && !note.isMarkdownEnabled) {
-                activityModel.enableMarkdown(note)
-            }
-            action(R.string.action_duplicate, R.drawable.ic_duplicate, condition = isNormal) {
-                activityModel.duplicateNotes(note)
             }
             action(R.string.action_export, R.drawable.ic_export_note) {
                 activityModel.notesToBackup = setOf(note)

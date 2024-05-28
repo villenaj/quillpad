@@ -56,13 +56,13 @@
         tools:node="remove" />
     </provider>
 
-    <receiver
-      android:exported="false"
-      android:name=".ui.reminders.ReminderReceiver">
-      <intent-filter>
-        <action android:name="android.intent.action.BOOT_COMPLETED" />
-      </intent-filter>
-    </receiver>
+      <receiver
+          android:exported="false"
+          android:name=".ui.reminders.ReminderReceiver">
+          <intent-filter>
+              <action android:name="android.intent.action.BOOT_COMPLETED" />
+          </intent-filter>
+      </receiver>
 
     <service
       android:exported="false" android:foregroundServiceType="mediaPlayback"

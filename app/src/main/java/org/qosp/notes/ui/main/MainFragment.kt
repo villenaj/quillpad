@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.ColorInt
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
@@ -36,7 +37,6 @@ import org.qosp.notes.ui.recorder.RECORD_CODE
 import org.qosp.notes.ui.recorder.RecordAudioDialog
 import org.qosp.notes.ui.utils.ChooseFilesContract
 import org.qosp.notes.ui.utils.TakePictureContract
-import org.qosp.notes.ui.utils.launch
 import org.qosp.notes.ui.utils.navigateSafely
 import org.qosp.notes.ui.utils.viewBinding
 import javax.inject.Inject
@@ -44,11 +44,11 @@ import javax.inject.Inject
 @AndroidEntryPoint
 open class MainFragment : AbstractNotesFragment(R.layout.fragment_main) {
     private val binding by viewBinding(FragmentMainBinding::bind)
-
+    @ColorInt
     override val currentDestinationId: Int = R.id.fragment_main
     override val model: MainViewModel by viewModels()
-
     open val notebookId: Long? = null
+
 
     private val chooseFileLauncher = registerForActivityResult(ChooseFilesContract) { uris ->
         if (uris.isEmpty()) return@registerForActivityResult
