@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:tools="http://schemas.android.com/tools"
-      xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group
             android:id="@+id/section_notes"
             android:checkableBehavior="single">
@@ -10,6 +9,11 @@
                 android:title="@string/nav_all_notes"
                 android:orderInCategory="0"/>
         <item
+                android:id="@+id/fragment_archive"
+                android:icon="@drawable/ic_archive"
+                android:title="@string/nav_archive"
+                android:orderInCategory="0"/>
+        <item
                 android:id="@+id/fragment_deleted"
                 android:icon="@drawable/ic_bin"
                 android:title="@string/nav_deleted"
@@ -17,27 +21,35 @@
     </group>
 
     <item
-        android:id="@+id/menu_notebooks"
-        android:orderInCategory="1"
-        android:title="@string/nav_notebooks"
-        android:visibility="invisible"
-        tools:visibility="invisible">
+            android:id="@+id/menu_notebooks"
+            android:title="@string/nav_notebooks"
+            android:orderInCategory="1">
         <menu>
             <group
-                android:id="@+id/section_notebooks"
-                android:checkableBehavior="single">
+                    android:id="@+id/section_notebooks"
+                    android:checkableBehavior="single">
                 <item
-                    android:id="@+id/fragment_manage_notebooks"
-                    android:icon="@drawable/ic_manage_notebooks"
-                    android:title="@string/nav_your_notebooks" />
+                        android:id="@+id/fragment_manage_notebooks"
+                        android:icon="@drawable/ic_manage_notebooks"
+                        android:title="@string/nav_your_notebooks"/>
                 <item
-                    android:id="@+id/nav_default_notebook"
-                    android:icon="@drawable/ic_notebook"
-                    android:title="@string/default_notebook"
-                    android:visible="false" />
+                        android:id="@+id/nav_default_notebook"
+                        android:icon="@drawable/ic_notebook"
+                        android:title="@string/default_notebook"
+                        android:visible="false"/>
             </group>
         </menu>
     </item>
+
+    <group
+            android:id="@+id/section_tags"
+            android:checkableBehavior="single">
+        <item
+                android:icon="@drawable/ic_tag"
+                android:id="@+id/fragment_tags"
+                android:title="@string/nav_tags"
+                android:orderInCategory="2"/>
+    </group>
 
     <group
             android:id="@+id/section_settings"

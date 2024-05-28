@@ -25,6 +25,7 @@ import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import org.qosp.notes.components.workers.BinCleaningWorker
 import org.qosp.notes.components.workers.SyncWorker
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -95,6 +96,8 @@ class App : Application(), ImageLoaderFactory, Configuration.Provider {
         val workManager = WorkManager.getInstance(this)
 
         val periodicRequests = listOf(
+            "BIN_CLEAN" to PeriodicWorkRequestBuilder<BinCleaningWorker>(5, TimeUnit.HOURS)
+                .build(),
             "SYNC" to PeriodicWorkRequestBuilder<SyncWorker>(1, TimeUnit.HOURS)
                 .setConstraints(
                     Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()

@@ -1,8 +1,8 @@
-package org.qosp.notes.data.sync.local.model
+package org.qosp.notes.data.sync.nextcloud.model
 
 import org.qosp.notes.data.model.Note
 
-fun Note.asNextcloudNote(id: Long, category: String): LocalNote = LocalNote(
+fun Note.asNextcloudNote(id: Long, category: String): NextcloudNote = NextcloudNote(
     id = id,
     title = title,
     content = if (isList) taskListToMd() else content,
@@ -11,7 +11,7 @@ fun Note.asNextcloudNote(id: Long, category: String): LocalNote = LocalNote(
     modified = modifiedDate
 )
 
-fun LocalNote.asNewLocalNote(id: Long, notebookId: Long?) = Note(
+fun NextcloudNote.asNewLocalNote(id: Long, notebookId: Long?) = Note(
     id = id,
     title = title,
     content = content,

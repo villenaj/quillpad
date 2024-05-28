@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/layout_drawer_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -10,43 +9,38 @@
         android:fitsSystemWindows="true">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/text_view_username"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@id/button_sync_settings"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone" />
+            android:id="@+id/text_view_username"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_sync_settings"
+            app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/text_view_provider"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/test"
-        app:layout_constraintEnd_toStartOf="@id/button_sync_settings"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_view_username" />
+            android:id="@+id/text_view_provider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_sync_settings"
+            app:layout_constraintTop_toBottomOf="@id/text_view_username"
+            app:layout_constraintBottom_toTopOf="@id/test"/>
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/button_sync_settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/background_imagebutton"
-        android:src="@drawable/ic_sync_settings"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/test"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone" />
+            android:id="@+id/button_sync_settings"
+            android:layout_marginEnd="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_imagebutton"
+            android:src="@drawable/ic_sync_settings"
+            app:layout_constraintBottom_toTopOf="@id/test"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/test"

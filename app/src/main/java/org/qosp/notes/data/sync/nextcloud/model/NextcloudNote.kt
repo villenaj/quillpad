@@ -1,9 +1,9 @@
-package org.qosp.notes.data.sync.local.model
+package org.qosp.notes.data.sync.nextcloud.model
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LocalNote(
+data class NextcloudNote(
     val id: Long,
     val etag: String? = null,
     val content: String,
